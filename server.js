@@ -1,10 +1,12 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
 const {Cloud} = require('./models');
 const bodyParser = require('body-parser');
-
-const app = express;
+const {PORT, CLIENT_ORIGIN} = require('./config');
+const app = express();
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
