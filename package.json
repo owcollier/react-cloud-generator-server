@@ -1,0 +1,13 @@
+{
+  "name": "wordcloud-generator-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thinkful-cohort-16/server-fullstack-capstone-ng-wc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
