@@ -27,7 +27,7 @@ app.use(
 app.use(bodyParser.json());
 
 //get endpoint for all clouds
-app.get('/api/clouds', (req, res)=>{
+app.get('/clouds', (req, res)=>{
   Cloud.find().then(data => data.json()).then(data => res.json(data));
   // Cloud
   //   .find().sort({createdOn: -1})
@@ -41,7 +41,7 @@ app.get('/api/clouds', (req, res)=>{
 });
 
 //get endpoint for a single cloud
-app.get('/api/clouds/:id', (req, res) => {
+app.get('/clouds/:id', (req, res) => {
   Cloud
     .findById(req.params.id)
     .then(cloud => res.json(post.apiRepr()))
@@ -52,7 +52,7 @@ app.get('/api/clouds/:id', (req, res) => {
 })
 
 //post endpoint to create a new word cloud
-app.post('/api/clouds', (req, res) => {
+app.post('/clouds', (req, res) => {
   const requiredFields = ['words', 'font', 'color'];
   for (let i=0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -80,7 +80,7 @@ app.post('/api/clouds', (req, res) => {
 })
 
 //put endpoint to be able to increment upvotes & downvotes
-app.put('/api/clouds/:id', (req, res) => {
+app.put('/clouds/:id', (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
@@ -102,7 +102,7 @@ app.put('/api/clouds/:id', (req, res) => {
 });
 
 //delete endpoint to be able to delete a cloud
-app.delete('/api/clouds/:id', (req, res) => {
+app.delete('/clouds/:id', (req, res) => {
   Cloud
     .findByIdAndRemove(req.params.id)
     .then(() => {
