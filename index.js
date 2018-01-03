@@ -88,7 +88,7 @@ app.put('/clouds/:id', (req, res) => {
   }
 
   const updated = {};
-  const updateableFields = ['upvotes', 'downvotes'];
+  const updateableFields = ['title', 'words', 'font', 'color', 'upvotes', 'downvotes'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
