@@ -9,6 +9,7 @@ const jsonParser = bodyParser.json();
 const {PORT, CLIENT_ORIGIN, DATABASE_URL} = require('./config');
 const app = express();
 const mongoose = require('mongoose');
+const data = require('./seed-data');
 
 let server;
 
@@ -28,28 +29,28 @@ app.use(bodyParser.json());
 
 //get endpoint for all clouds
 app.get('/clouds', (req, res)=>{
-  Cloud.find().then(data => data.json()).then(data => res.json(data));
-  // Cloud
-  //   .find().sort({createdOn: -1})
-  //   .then(clouds => {
-  //     res.json(clouds.map(cloud => cloud.apiRepr()));
-  //   })
-  //   .catch (err => {
-  //     console.error(err);
-  //     res.status(500).json({error: 'something went wrong'});
-  //   });
+  // res.json(data);
+  Cloud
+    .find().sort({createdOn: -1})
+    .then(clouds => {
+      res.json(clouds.map(cloud => cloud.apiRepr()));
+    })
+    .catch (err => {
+      console.error(err);
+      res.status(500).json({error: 'something went wrong'});
+    });
 });
 
 //get endpoint for a single cloud
 app.get('/clouds/:id', (req, res) => {
   Cloud
     .findById(req.params.id)
-    .then(cloud => res.json(post.apiRepr()))
+    .then(cloud => res.json(cloud.apiRepr()))
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'something went wrong' });
     });
-})
+});
 
 //post endpoint to create a new word cloud
 app.post('/clouds', (req, res) => {
@@ -76,8 +77,8 @@ app.post('/clouds', (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({error: 'something went wrong'});
-    })
-})
+    });
+});
 
 //put endpoint to be able to increment upvotes & downvotes
 app.put('/clouds/:id', (req, res) => {
@@ -109,7 +110,7 @@ app.delete('/clouds/:id', (req, res) => {
       console.log(`Deleted word cloud with id \`${req.params.ID}\``);
       res.status(204).end();
     });
-})
+});
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT) {
   return new Promise((resolve, reject) => {
