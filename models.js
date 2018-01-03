@@ -11,8 +11,7 @@ const CloudSchema = new mongoose.Schema({
   color: {type: String, required: true},
   createdOn: {type: Date, default: Date.now},
   upvotes: {type: Number, default: 0},
-  downvotes: {type: Number, default: 0},
-  thumbnail: {type: String}
+  downvotes: {type: Number, default: 0}
 });
   
 CloudSchema.methods.apiRepr = function(){
@@ -24,8 +23,7 @@ CloudSchema.methods.apiRepr = function(){
     color: this.color,
     createdOn: this.createdOn,
     upvotes: this.upvotes,
-    downvotes: this.downvotes,
-    thumbnail: this.thumbnail
+    downvotes: this.downvotes
   };
 };
   

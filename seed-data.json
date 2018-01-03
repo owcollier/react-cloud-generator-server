@@ -1,7 +1,8 @@
 [
     {
+        "title": "Quick Fox",
         "id": "111111",
-        "words": ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
+        "words": ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog", "the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog", "the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"],
         "font": "Arial",
         "color": "blue",
         "createdOn": "1-1-2018",
@@ -9,8 +10,9 @@
         "downvotes": "0"
     },
     {
+        "title": "The Beatles",
         "id": "222222",
-        "words": ["all", "you", "need", "is", "love", "love", "is", "all", "you", "need"],
+        "words": ["all", "you", "need", "is", "love", "love", "is", "all", "you", "need", "all", "you", "need", "is", "love", "love", "is", "all", "you", "need", "all", "you", "need", "is", "love", "love", "is", "all", "you", "need"],
         "font": "Arial",
         "color": "red",
         "createdOn": "1-2-2018",
