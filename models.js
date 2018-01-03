@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const CloudSchema = new mongoose.Schema({
+  title: {type: String, required: true},
   words: [{type: String, required: true}],
   font: {type: String, required: true},
   color: {type: String, required: true},
@@ -16,6 +17,7 @@ const CloudSchema = new mongoose.Schema({
 CloudSchema.methods.apiRepr = function(){
   return {
     id: this._id,
+    title: this.title,
     words: this.words,
     font: this.font,
     color: this.color,

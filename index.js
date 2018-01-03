@@ -52,7 +52,7 @@ app.get('/clouds/:id', (req, res) => {
 
 //post endpoint to create a new word cloud
 app.post('/clouds', (req, res) => {
-  const requiredFields = ['words', 'font', 'color'];
+  const requiredFields = ['title', 'words', 'font', 'color'];
   for (let i=0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -64,6 +64,7 @@ app.post('/clouds', (req, res) => {
 
   Cloud
     .create({
+      title: req.body.title,
       words: req.body.words,
       font: req.body.font,
       color: req.body.color
