@@ -5,13 +5,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 const {Cloud} = require('./models');
 const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
-const {PORT, CLIENT_ORIGIN, DATABASE_URL} = require('./config');
 const app = express();
-const mongoose = require('mongoose');
-const data = require('./seed-data');
+// const data = require('./seed-data');
 
-let server;
+const {PORT, CLIENT_ORIGIN} = require('./config');
+const {dbConnect} = require('./db-mongoose');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -112,25 +110,20 @@ app.delete('/clouds/:id', (req, res) => {
     });
 });
 
-function runServer(databaseUrl = DATABASE_URL, port = PORT) {
-  return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, { useMongoClient: true }, err => {
-      if (err) {
-        return reject(err);
-      }
-      server = app.listen(port, () => {
-        console.log(`Your app is listening on port ${port}`);
-        resolve();
-      })
-        .on('error', err => {
-          mongoose.disconnect();
-          reject(err);
-        });
+function runServer(port = PORT) {
+  const server = app
+    .listen(port, () => {
+      console.info(`App listening on port ${server.address().port}`);
+    })
+    .on('error', err => {
+      console.error('Express failed to start');
+      console.error(err);
     });
-  });
 }
 
+
 if (require.main === module) {
+  dbConnect();
   runServer();
 }
 

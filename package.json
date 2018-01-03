@@ -2,7 +2,7 @@
   "name": "wordcloud-generator-app",
   "version": "1.0.0",
   "description": "An application that allows users to create their own word clouds and save them to the library",
-  "main": "server.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thinkful-cohort-16/server-fullstack-capstone-ng-wc.git"
@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
