@@ -5,8 +5,12 @@ const cors = require('cors');
 const morgan = require('morgan');
 const {Cloud} = require('./models');
 const bodyParser = require('body-parser');
-const {PORT, CLIENT_ORIGIN} = require('./config');
+const jsonParser = bodyParser.json();
+const {PORT, CLIENT_ORIGIN, DATABASE_URL} = require('./config');
 const app = express();
+const mongoose = require('mongoose');
+
+let server;
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -20,17 +24,35 @@ app.use(
   })
 );
 
+app.use(bodyParser.json());
+
+//get endpoint for all clouds
 app.get('/api/clouds', (req, res)=>{
-  Cloud
-    .find().sort({createdOn: -1})
-    .then(clouds => {res.json(clouds.map(cloud => cloud.apiRepr()));})
-    .catch (err => {
-      console.error(err);
-      res.status(500).json({error: 'something went wrong'});
-    });
+  Cloud.find().then(data => data.json()).then(data => res.json(data));
+  // Cloud
+  //   .find().sort({createdOn: -1})
+  //   .then(clouds => {
+  //     res.json(clouds.map(cloud => cloud.apiRepr()));
+  //   })
+  //   .catch (err => {
+  //     console.error(err);
+  //     res.status(500).json({error: 'something went wrong'});
+  //   });
 });
 
-app.post('/api/clouds', jsonParser, (req, res) => {
+//get endpoint for a single cloud
+app.get('/api/clouds/:id', (req, res) => {
+  Cloud
+    .findById(req.params.id)
+    .then(cloud => res.json(post.apiRepr()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'something went wrong' });
+    });
+})
+
+//post endpoint to create a new word cloud
+app.post('/api/clouds', (req, res) => {
   const requiredFields = ['words', 'font', 'color'];
   for (let i=0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -56,3 +78,59 @@ app.post('/api/clouds', jsonParser, (req, res) => {
       res.status(500).json({error: 'something went wrong'});
     })
 })
+
+//put endpoint to be able to increment upvotes & downvotes
+app.put('/api/clouds/:id', (req, res) => {
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and request body id values must match'
+    });
+  }
+
+  const updated = {};
+  const updateableFields = ['upvotes', 'downvotes'];
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+
+  Cloud
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+    .then(updatedPost => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Something went wrong' }));
+});
+
+//delete endpoint to be able to delete a cloud
+app.delete('/api/clouds/:id', (req, res) => {
+  Cloud
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      console.log(`Deleted word cloud with id \`${req.params.ID}\``);
+      res.status(204).end();
+    });
+})
+
+function runServer(databaseUrl = DATABASE_URL, port = PORT) {
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, { useMongoClient: true }, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+        .on('error', err => {
+          mongoose.disconnect();
+          reject(err);
+        });
+    });
+  });
+}
+
+if (require.main === module) {
+  runServer();
+}
+
+module.exports = {app};

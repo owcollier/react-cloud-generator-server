@@ -1,7 +1,7 @@
 {
   "name": "wordcloud-generator-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "An application that allows users to create their own word clouds and save them to the library",
   "main": "server.js",
   "repository": {
     "type": "git",
@@ -9,11 +9,17 @@
   },
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "dotenv": "^4.0.0",
     "express": "^4.16.2",
+    "mongo": "^0.1.0",
     "mongoose": "^5.0.0-rc1",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "nodemon": "^1.14.7"
   }
 }
