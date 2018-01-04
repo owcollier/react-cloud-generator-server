@@ -52,7 +52,7 @@ app.get('/clouds/:id', (req, res) => {
 
 //post endpoint to create a new word cloud
 app.post('/clouds', (req, res) => {
-  const requiredFields = ['title', 'words', 'font', 'color'];
+  const requiredFields = ['title', 'text', 'words', 'font', 'color'];
   for (let i=0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -65,6 +65,7 @@ app.post('/clouds', (req, res) => {
   Cloud
     .create({
       title: req.body.title,
+      text: req.body.text,
       words: req.body.words,
       font: req.body.font,
       color: req.body.color
@@ -88,7 +89,7 @@ app.put('/clouds/:id', (req, res) => {
   }
 
   const updated = {};
-  const updateableFields = ['title', 'words', 'font', 'color', 'upvotes', 'downvotes'];
+  const updateableFields = ['title', 'text', 'words', 'font', 'color', 'upvotes', 'downvotes'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
