@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 
 const CloudSchema = new mongoose.Schema({
   title: {type: String, required: true},
-  words: [{type: String, required: true}],
+  words: [String],
   font: {type: String, required: true},
   color: {type: String, required: true},
   createdOn: {type: Date, default: Date.now},
