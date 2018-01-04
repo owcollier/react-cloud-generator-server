@@ -82,7 +82,7 @@ app.post('/clouds', (req, res) => {
 
 //put endpoint to be able to increment upvotes & downvotes
 app.put('/clouds/:id', (req, res) => {
-  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+  if (!(req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
     });
