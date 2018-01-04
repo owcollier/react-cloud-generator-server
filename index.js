@@ -102,7 +102,7 @@ app.put('/clouds/:id', (req, res) => {
     .catch(err => res.status(500).json({ message: 'Something went wrong' }));
 });
 
-app.post('/clouds/:id/upvote', (req, res) => {
+app.put('/clouds/:id/upvote', (req, res) => {
   if (!(req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
