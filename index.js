@@ -82,14 +82,14 @@ app.post('/clouds', (req, res) => {
 
 //put endpoint to be able to increment upvotes & downvotes
 app.put('/clouds/:id', (req, res) => {
-  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+  if (!(req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'
     });
   }
 
   const updated = {};
-  const updateableFields = ['title', 'text', 'words', 'font', 'color', 'upvotes', 'downvotes'];
+  const updateableFields = ['title', 'text', 'words', 'font', 'color'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
@@ -98,7 +98,49 @@ app.put('/clouds/:id', (req, res) => {
 
   Cloud
     .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedPost => res.status(204).end())
+    .then(updatedCloud => res.status(204).json(updatedCloud))
+    .catch(err => res.status(500).json({ message: 'Something went wrong' }));
+});
+
+app.put('/clouds/:id/upvote', (req, res) => {
+  if (!(req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and request body id values must match'
+    });
+  }
+
+  const updated = {};
+  const updateableFields = ['upvotes'];
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+
+  Cloud
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+    .then(updatedCloud => res.status(204).json(updatedCloud))
+    .catch(err => res.status(500).json({ message: 'Something went wrong' }));
+});
+
+app.put('/clouds/:id/downvote', (req, res) => {
+  if (!(req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and request body id values must match'
+    });
+  }
+
+  const updated = {};
+  const updateableFields = ['downvotes'];
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+
+  Cloud
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
+    .then(updatedCloud => res.status(204).json(updatedCloud))
     .catch(err => res.status(500).json({ message: 'Something went wrong' }));
 });
 
