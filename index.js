@@ -123,8 +123,10 @@ app.put('/clouds/:id/upvote', (req, res) => {
 
   Cloud
     .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedCloud => {console.log(updatedCloud);
-       return res.status(204).json({msg: 'hello'})})
+    .then(updatedCloud => {
+      console.log(updatedCloud);
+      res.status(201).location(`/clouds/${req.params.id}/upvote`).json(updatedCloud);
+    })
     .catch(err => res.status(500).json({ message: 'Something went wrong' }));
 });
 
