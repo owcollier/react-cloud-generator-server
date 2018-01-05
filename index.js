@@ -6,10 +6,12 @@ const morgan = require('morgan');
 const {Cloud} = require('./models');
 const bodyParser = require('body-parser');
 const app = express();
+const mongoose = require('mongoose');
+mongoose.Promose = global.Promise;
 // const data = require('./seed-data');
 
 const {PORT, CLIENT_ORIGIN} = require('./config');
-const {dbConnect} = require('./db-mongoose');
+const {dbConnect, dbDisconnect} = require('./db-mongoose');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -162,21 +164,44 @@ app.delete('/clouds/:id', (req, res) => {
     });
 });
 
-function runServer(port = PORT) {
-  const server = app
-    .listen(port, () => {
-      console.info(`App listening on port ${server.address().port}`);
-    })
-    .on('error', err => {
-      console.error('Express failed to start');
-      console.error(err);
+let server;
+
+function runServer(port = PORT, url) {
+  return dbConnect(url)
+    .then( function() {
+      return new Promise ((res, rej) => {
+        const server = app
+          .listen(port, () => {
+            console.info(`App listening on port ${server.address().port}`);
+            res();
+          })
+          .on('error', err => {
+            console.error('Express failed to start');
+            console.error(err);
+            rej();
+          });
+      });
+    });
+}
+
+function closeServer() {
+  return dbDisconnect()
+    .then(() => {
+      return new Promise((resolve, reject) => {
+        console.log('Closing server');
+        server.close(err => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
+      });
     });
 }
 
 
 if (require.main === module) {
-  dbConnect();
   runServer();
 }
 
-module.exports = {app};
+module.exports = {app, runServer, closeServer};
