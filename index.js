@@ -83,6 +83,7 @@ app.post('/clouds', (req, res) => {
 //put endpoint to be able to increment upvotes & downvotes
 app.put('/clouds/:id', (req, res) => {
   if (!(req.params.id === req.body.id)) {
+    console.log('Bleq!');
     res.status(400).json({
       error: 'Request path id and request body id values must match'
     });
@@ -98,7 +99,10 @@ app.put('/clouds/:id', (req, res) => {
 
   Cloud
     .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedCloud => res.status(204).json(updatedCloud))
+    .then(function(updatedCloud) {
+      console.log(updatedCloud);
+      res.status(201).location(`/clouds/${req.params.id}`).json(updatedCloud);
+    })
     .catch(err => res.status(500).json({ message: 'Something went wrong' }));
 });
 
