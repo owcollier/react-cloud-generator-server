@@ -120,12 +120,13 @@ app.put('/clouds/:id/upvote', (req, res) => {
       updated[field] = req.body[field];
     }
   });
-
+  console.log('updated:', updated);
   Cloud
-    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedCloud => {
+    // .findByIdAndUpdate(req.params.id, { $set: {upvotes: updated.upvotes} }, { new: true })
+    .findOneAndUpdate(req.params.id, { $inc: {upvotes: 1} }, {new: true})
+    .then(function(updatedCloud) {
       console.log(updatedCloud);
-      res.status(201).location(`/clouds/${req.params.id}/upvote`).json(updatedCloud);
+      return res.json(updatedCloud);
     })
     .catch(err => res.status(500).json({ message: 'Something went wrong' }));
 });
@@ -146,8 +147,11 @@ app.put('/clouds/:id/downvote', (req, res) => {
   });
 
   Cloud
-    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
-    .then(updatedCloud => res.status(204).json(updatedCloud))
+    .findOneAndUpdate(req.params.id, { $inc: {downvotes: 1} }, {new: true})
+    .then(function(updatedCloud) {
+      console.log(updatedCloud);
+      return res.json(updatedCloud);
+    })
     .catch(err => res.status(500).json({ message: 'Something went wrong' }));
 });
 
