@@ -170,7 +170,7 @@ function runServer(port = PORT, url) {
   return dbConnect(url)
     .then( function() {
       return new Promise ((res, rej) => {
-        const server = app
+        server = app
           .listen(port, () => {
             console.info(`App listening on port ${server.address().port}`);
             res();

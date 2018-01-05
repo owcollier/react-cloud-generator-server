@@ -62,19 +62,19 @@ describe('word cloud API resource', function() {
   describe('GET endpoint', function() {
 
     it('should return all existing wordclouds', function() {
-      let wordclouds = [];
+      let res;
       return chai.request(app)
         .get('/clouds')
-        .then(res => {
-          return res;
-        })
-        .then(res => {
-          res.body.push(wordclouds);
-          res.body.should.have.length.of.at.least(1);
+        .then(response => {
+          // console.log('here:', response);
+          response.should.have.status(200);
+          res = response;
+          res.body.length.should.be.above(1);
+
           return Cloud.count();
         })
         .then(count => {
-          res.body.should.have.length.of(count);
+          res.body.length.should.equal(count);
         });
     });
 
@@ -101,7 +101,6 @@ describe('word cloud API resource', function() {
           resCloud.text.should.equal(cloud.text);
           resCloud.font.should.equal(cloud.font);
           resCloud.color.should.equal(cloud.color);
-          resCloud.createdOn.should.equal(cloud.createdOn);
         });
     });
   });
@@ -128,7 +127,7 @@ describe('word cloud API resource', function() {
           res.body.title.should.equal(newCloud.title);
           res.body.id.should.not.be.null;
           res.body.text.should.equal(newCloud.text);
-          res.body.words.should.equal(newCloud.words);
+          res.body.words.should.be.a('array');
           res.body.font.should.equal(newCloud.font);
           res.body.color.should.equal(newCloud.color);
           return Cloud.findById(res.body.id);
@@ -136,7 +135,7 @@ describe('word cloud API resource', function() {
         .then(function (cloud) {
           cloud.title.should.equal(newCloud.title);
           cloud.text.should.equal(newCloud.text);
-          cloud.words.should.equal(newCloud.words);
+          cloud.words[0].should.equal(newCloud.words.toString());
           cloud.font.should.equal(newCloud.font);
           cloud.color.should.equal(newCloud.color);
         });
