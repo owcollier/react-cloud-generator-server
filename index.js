@@ -158,7 +158,7 @@ app.delete('/clouds/:id', (req, res) => {
     .findByIdAndRemove(req.params.id)
     .then(() => {
       console.log(`Deleted word cloud with id \`${req.params.ID}\``);
-      res.sendStatus(204);
+      res.sendStatus(204).end();
     });
 });
 
